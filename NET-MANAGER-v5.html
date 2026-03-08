@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#060B14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NET MANAGER">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="NET MANAGER v5 — Gestion ISP Communautaire avec Tickets & Alertes">
+<title>NET MANAGER v5</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTkVUIE1BTkFHRVIgdjUiLCJzaG9ydF9uYW1lIjoiTkVUIE1HUiIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDYwQjE0IiwidGhlbWVfY29sb3IiOiIjMDYwQjE0IiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInPjxyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTAwJyBmaWxsPSclMjMwQjExMjAnLz48dGV4dCB4PScyNTYnIHk9JzMwMCcgZm9udC1zaXplPScyMjAnIHRleHQtYW5jaG9yPSdtaWRkbGUnPvCfk6E8L3RleHQ+PC9zdmc+Iiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060B14;--s1:#0B1120;--s2:#121D33;--s3:#182640;--bd:#1E3050;--cy:#00ACC1;--cy2:#26C6DA;--cyd:rgba(0,172,193,.12);--gn:#2E7D32;--gn2:#66BB6A;--gnd:rgba(102,187,106,.12);--rd:#C62828;--rd2:#EF5350;--rdd:rgba(239,83,80,.12);--am:#EF6C00;--am2:#FFA726;--amd:rgba(255,167,38,.12);--bl:#1565C0;--bl2:#42A5F5;--bld:rgba(66,165,245,.12);--pu:#7C3AED;--wh:#E8EDF4;--tx:#B0BEC5;--mu:#78909C;--dm:#455A64}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx);overflow:hidden;height:100vh;height:100dvh}
+input,select,textarea,button{font-family:inherit;outline:none}
+#root{height:100%;display:flex;flex-direction:column}
+.topbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50}
+.topbar h1{font-size:15px;font-weight:800;color:var(--wh);display:flex;align-items:center;gap:7px}
+.topbar .logo{width:28px;height:28px;background:linear-gradient(135deg,var(--cy),var(--bl2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.topbar .right{display:flex;align-items:center;gap:8px}
+.topbar .sync-dot{width:8px;height:8px;border-radius:50%;background:var(--gn2)}
+.content{flex:1;overflow-y:auto;padding:14px;padding-bottom:80px;-webkit-overflow-scrolling:touch}
+.bottomnav{background:var(--s1);border-top:1px solid var(--bd);position:fixed;bottom:0;left:0;right:0;z-index:50;padding:4px 0 env(safe-area-inset-bottom,4px)}
+.bottomnav .tabs{display:flex;justify-content:space-around}
+.tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 4px;border:none;background:0;color:var(--dm);font-size:8px;font-weight:500;cursor:pointer;position:relative;min-width:44px;transition:.12s}
+.tab svg{width:21px;height:21px}
+.tab.on{color:var(--cy)}
+.tab .dot{position:absolute;top:1px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--rd2)}
+.tab .cnt{position:absolute;top:-1px;right:0;background:var(--rd);color:#fff;font-size:7px;font-weight:800;padding:1px 4px;border-radius:8px;min-width:14px;text-align:center}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:6px}
+.ph h2{font-size:18px;font-weight:800;color:var(--wh)}
+.ph .sub{font-size:10px;color:var(--dm)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#fff;transition:.12s}
+.btn:active{transform:scale(.96)}
+.btn-cy{background:linear-gradient(135deg,var(--cy),var(--bl2))}
+.btn-gn{background:linear-gradient(135deg,var(--gn),#00897B)}
+.btn-rd{background:var(--rd)}
+.btn-am{background:var(--am)}
+.btn-gh{background:var(--s2);color:var(--mu);border:1px solid var(--bd)}
+.btn-wa{background:#25D366}
+.btn-sm{padding:5px 10px;font-size:10px;border-radius:6px}
+.btn-full{width:100%;justify-content:center}
+.ib{background:0;border:0;cursor:pointer;color:var(--mu);padding:4px;display:inline-flex;align-items:center}
+.kg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.kc{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px;border-top:3px solid var(--cy);position:relative;overflow:hidden}
+.kc .kl{font-size:8px;color:var(--mu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kc .kv{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.kc .kv.sm{font-size:13px}
+.kc .ki{position:absolute;top:8px;right:8px;font-size:15px;opacity:.6}
+.search-box{position:relative;margin-bottom:10px}
+.search-box input{width:100%;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:10px 14px 10px 36px;color:var(--wh);font-size:13px}
+.search-box input:focus{border-color:var(--cy)}
+.search-box .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--dm);font-size:16px}
+.filters{display:flex;gap:5px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.ftag{padding:5px 11px;border-radius:20px;border:1px solid var(--bd);background:var(--s1);color:var(--mu);font-size:10px;font-weight:600;white-space:nowrap;cursor:pointer;flex-shrink:0}
+.ftag.on{background:var(--cyd);color:var(--cy);border-color:rgba(0,172,193,.3)}
+.card-list{display:flex;flex-direction:column;gap:6px}
+.client-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.12s;position:relative}
+.client-card:active{background:var(--s2);transform:scale(.99)}
+.client-card .avatar{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
+.client-card .info{flex:1;min-width:0}
+.client-card .name{font-size:13px;font-weight:700;color:var(--wh);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.client-card .meta{font-size:10px;color:var(--dm);display:flex;gap:6px;margin-top:2px;align-items:center}
+.client-card .right-info{text-align:right;flex-shrink:0}
+.client-card .price{font-size:12px;font-weight:700;color:var(--gn2);font-family:'JetBrains Mono',monospace}
+.client-card .day-badge{font-size:9px;color:var(--am2);margin-top:2px}
+.bg{display:inline-block;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700}
+.bg-gn{background:var(--gnd);color:var(--gn2)}.bg-rd{background:var(--rdd);color:var(--rd2)}.bg-am{background:var(--amd);color:var(--am2)}.bg-bl{background:var(--bld);color:var(--bl2)}.bg-gy{background:var(--s2);color:var(--mu)}
+.pay-item{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.pay-item .pi-left{display:flex;align-items:center;gap:10px}
+.pay-item .pi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.pay-item .pi-name{font-size:12px;font-weight:600;color:var(--wh)}
+.pay-item .pi-meta{font-size:9px;color:var(--dm)}
+.pay-item .pi-amount{font-size:13px;font-weight:700;color:var(--gn2);font-family:'JetBrains Mono',monospace}
+.pay-item .pi-date{font-size:9px;color:var(--dm)}
+.pay-item .pi-actions{display:flex;gap:4px;margin-top:4px;justify-content:flex-end}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .12s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:var(--s1);border:1px solid var(--bd);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-sheet .handle{width:36px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 14px}
+.modal-sheet h3{font-size:16px;font-weight:800;color:var(--wh);margin-bottom:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg .full{grid-column:1/-1}
+.fd label{display:block;font-size:9px;color:var(--mu);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.fd input,.fd select,.fd textarea{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;color:var(--wh);font-size:13px}
+.fd input:focus,.fd select:focus{border-color:var(--cy)}
+.sep{grid-column:1/-1;border-top:1px solid var(--bd);padding-top:7px}.sep span{font-size:8px;color:var(--mu);text-transform:uppercase;letter-spacing:1px}
+.detail-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.detail-item{background:var(--s1);padding:9px 12px}
+.detail-item .dl{font-size:8px;color:var(--dm);text-transform:uppercase;letter-spacing:.3px}
+.detail-item .dv{font-size:12px;color:var(--wh);font-weight:500;margin-top:1px}
+.section-title{font-size:12px;font-weight:700;color:var(--wh);margin:12px 0 8px;display:flex;align-items:center;justify-content:space-between}
+.quick-pay{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:8px}
+.quick-pay .qp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--s2);border-radius:8px;margin-bottom:3px}
+.hist-item .ha{font-size:11px;font-weight:700;color:var(--wh)}
+.hist-item .hm{font-size:9px;color:var(--dm);margin-left:5px}
+.hist-item .hd{font-size:9px;color:var(--mu)}
+.setting-item{display:flex;justify-content:space-between;align-items:center;padding:13px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;margin-bottom:7px;cursor:pointer}
+.setting-item:active{background:var(--s2)}
+.setting-item .si-left{display:flex;align-items:center;gap:10px}
+.setting-item .si-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.setting-item .si-title{font-size:12px;font-weight:600;color:var(--wh)}
+.setting-item .si-desc{font-size:9px;color:var(--dm)}
+.panel{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.panel h3{font-size:12px;font-weight:700;color:var(--wh);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.progress-row{margin-bottom:7px}
+.progress-top{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px}
+.progress-label{color:var(--mu)}.progress-value{color:var(--wh);font-weight:600}
+.progress-bar{height:5px;background:var(--s2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.login-screen{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px;background:radial-gradient(ellipse at 50% 30%,rgba(0,172,193,.05),transparent 70%),var(--bg)}
+.login-box{width:300px;max-width:100%;text-align:center}
+.login-box .logo-big{width:64px;height:64px;background:linear-gradient(135deg,var(--cy),var(--bl2));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:12px}
+.login-box h1{font-size:22px;font-weight:800;color:var(--wh);margin-bottom:4px}
+.login-box p{font-size:10px;color:var(--dm);margin-bottom:20px}
+.login-box .fd input{text-align:center;font-size:20px;letter-spacing:5px;padding:14px}
+.login-box .error{color:var(--rd2);font-size:11px;margin-bottom:8px;display:none}
+/* ── TICKET ── */
+.ticket{background:#fff;color:#000;border-radius:12px;padding:20px;max-width:360px;margin:0 auto;font-family:'IBM Plex Sans',sans-serif}
+.ticket .t-head{text-align:center;border-bottom:2px dashed #ddd;padding-bottom:12px;margin-bottom:12px}
+.ticket .t-head h2{font-size:16px;margin-bottom:2px}
+.ticket .t-head .t-sub{font-size:10px;color:#888}
+.ticket .t-head .t-num{font-size:12px;font-weight:700;color:#00ACC1;margin-top:6px}
+.ticket .t-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.ticket .t-row .t-label{color:#666}
+.ticket .t-row .t-val{font-weight:600;color:#111}
+.ticket .t-total{text-align:center;font-size:22px;font-weight:800;padding:12px;margin:12px 0;background:#f0fdf4;border-radius:8px;color:#2E7D32}
+.ticket .t-status{text-align:center;padding:6px;border-radius:6px;font-size:12px;font-weight:700}
+.ticket .t-status.paid{background:#dcfce7;color:#166534}
+.ticket .t-footer{text-align:center;font-size:9px;color:#aaa;margin-top:12px;padding-top:10px;border-top:2px dashed #ddd}
+/* ── ALERT CARD ── */
+.alert-card{background:var(--rdd);border:1px solid rgba(239,83,80,.2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;cursor:pointer}
+.alert-card.warn{background:var(--amd);border-color:rgba(255,167,38,.2)}
+.alert-card .ac-left{display:flex;align-items:center;gap:8px}
+.alert-card .ac-name{font-size:12px;font-weight:600;color:var(--wh)}
+.alert-card .ac-sub{font-size:9px;color:var(--dm)}
+.alert-card .ac-right{text-align:right}
+.alert-card .ac-days{font-size:13px;font-weight:800}
+.alert-card .ac-amount{font-size:9px;color:var(--dm)}
+.install-banner{background:linear-gradient(135deg,var(--cy),var(--bl2));padding:10px 14px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;color:#fff}
+.install-banner .ib-text{font-size:11px;font-weight:600}
+.install-banner .ib-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer}
+.toast{position:fixed;top:56px;left:50%;transform:translateX(-50%);padding:9px 18px;border-radius:10px;font-size:12px;font-weight:600;color:#fff;z-index:9999;animation:ti .2s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+@keyframes ti{from{transform:translateX(-50%) translateY(-16px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+@media print{body{background:#fff!important;overflow:visible!important}#root,.topbar,.bottomnav{display:none!important}#print-area{display:block!important}}
+#print-area{display:none}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="print-area"></div>
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIG — Plans modifiables par l'utilisateur
+// ══════════════════════════════════════════════════════════════
+const DEFAULT_PLANS=[{id:"basic",name:"Basic",speed:"5 Mbps",price:10000},{id:"standard",name:"Standard",speed:"10 Mbps",price:15000},{id:"premium",name:"Premium",speed:"20 Mbps",price:25000},{id:"entreprise",name:"Entreprise",speed:"50 Mbps",price:50000}];
+const STATUTS=["Actif","Suspendu","Expiré","En attente","Résilié"];
+const MODES=["Espèces","Wave","Orange Money","Free Money","Virement"];
+const EQUIPS=["Tenda F3","TP-Link WR840N","MikroTik hAP lite","LiteBeam + Tenda","LiteBeam 5AC","Autre"];
+
+const $F=n=>(n||0).toLocaleString("fr-FR")+" FCFA";
+const $D=d=>d?new Date(d).toLocaleDateString("fr-FR"):"—";
+const $T=()=>new Date().toISOString().split("T")[0];
+const $ID=()=>"CLI-"+String(Math.floor(Math.random()*9000)+1000);
+const $MAC=()=>Array.from({length:6},()=>Math.floor(Math.random()*256).toString(16).padStart(2,"0").toUpperCase()).join(":");
+const $CM=()=>{const n=new Date();return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")};
+const $REC=()=>"TK-"+Date.now().toString().slice(-8);
+const avatarColors=["#00ACC1","#2E7D32","#EF6C00","#C62828","#7C3AED","#1565C0","#00897B","#D81B60"];
+const getAC=name=>avatarColors[Math.abs([...(name||"?")].reduce((a,c)=>a+c.charCodeAt(0),0))%avatarColors.length];
+const getIn=name=>(name||"?").split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase();
+
+// ══════════════════════════════════════════════════════════════
+// DATABASE
+// ══════════════════════════════════════════════════════════════
+const DB={g(k,d){try{return JSON.parse(localStorage.getItem("nm5_"+k))||d}catch{return d}},s(k,v){localStorage.setItem("nm5_"+k,JSON.stringify(v))}};
+
+let clients=DB.g("cl",[]);
+let payments=DB.g("pa",[]);
+let plans=DB.g("plans",DEFAULT_PLANS);
+let config=DB.g("cfg",{nom:"Réseau Communautaire",localite:"",responsable:"",tel:"",pin:"",routeur:"MikroTik L009"});
+let page="dashboard",subPage=null,selectedId=null;
+let authenticated=!config.pin;
+
+function save(){DB.s("cl",clients);DB.s("pa",payments);DB.s("plans",plans);DB.s("cfg",config)}
+function getPlan(id){return plans.find(p=>p.id===id)||plans[0]}
+
+// Payment logic
+function gJ(c){return c.jourPaiement||(c.dateInscription?new Date(c.dateInscription).getDate():1)}
+function gDaysLeft(c){
+  const n=new Date(),d=gJ(c);
+  const thisM=new Date(n.getFullYear(),n.getMonth(),d);
+  if(thisM>n)return Math.ceil((thisM-n)/864e5);
+  const nextM=new Date(n.getFullYear(),n.getMonth()+1,d);
+  return Math.ceil((nextM-n)/864e5);
+}
+function gDaysLate(c){
+  const n=new Date(),d=gJ(c);
+  const due=new Date(n.getFullYear(),n.getMonth(),d);
+  if(n>due)return Math.ceil((n-due)/864e5);
+  return 0;
+}
+function gPS(c){
+  if(c.statut!=="Actif")return"na";const n=new Date(),cm=$CM();
+  if(payments.some(p=>p.clientId===c.id&&p.moisCouvert===cm&&p.statut==="Payé"))return"paye";
+  const d=gJ(c),due=new Date(n.getFullYear(),n.getMonth(),d);
+  if(n>due)return"impaye";if(Math.ceil((due-n)/864e5)<=3)return"bientot";return"ok";
+}
+
+// Toast
+let tT;function toast(m,t="success"){clearTimeout(tT);let e=document.getElementById("toast");if(!e){e=document.createElement("div");e.id="toast";e.className="toast";document.body.appendChild(e)}e.textContent=m;e.style.background=t==="success"?"var(--gn2)":t==="info"?"var(--bl2)":"var(--rd2)";e.style.display="block";tT=setTimeout(()=>e.style.display="none",2500)}
+
+// ══════════════════════════════════════════════════════════════
+// TICKET GENERATION & WHATSAPP
+// ══════════════════════════════════════════════════════════════
+function generateTicketHTML(payId){
+  const p=payments.find(x=>x.id===payId);if(!p)return"";
+  const c=clients.find(x=>x.id===p.clientId);const pl=c?getPlan(c.plan):null;
+  const moisLabel=p.moisCouvert?new Date(p.moisCouvert+"-01").toLocaleDateString("fr-FR",{month:"long",year:"numeric"}):"—";
+  return`<div class="ticket">
+    <div class="t-head"><h2>📡 ${config.nom||"Réseau Communautaire"}</h2><div class="t-sub">${config.localite||""} ${config.tel?"• Tél: "+config.tel:""}</div>
+    <div class="t-num">TICKET N° ${p.recu||$REC()}</div></div>
+    <div class="t-row"><span class="t-label">Date :</span><span class="t-val">${$D(p.datePaiement)}</span></div>
+    <div class="t-row"><span class="t-label">Client :</span><span class="t-val">${c?.nom||"—"}</span></div>
+    <div class="t-row"><span class="t-label">ID :</span><span class="t-val">${p.clientId}</span></div>
+    <div class="t-row"><span class="t-label">Téléphone :</span><span class="t-val">${c?.telephone||"—"}</span></div>
+    <div class="t-row"><span class="t-label">Plan :</span><span class="t-val">${pl?.name||"—"} (${pl?.speed||""})</span></div>
+    <div class="t-row"><span class="t-label">Mois :</span><span class="t-val">${moisLabel}</span></div>
+    <div class="t-row"><span class="t-label">Mode :</span><span class="t-val">${p.mode||"—"}</span></div>
+    <div class="t-total">${$F(p.montant)}</div>
+    <div class="t-status paid">✅ PAYÉ</div>
+    <div class="t-footer">${config.nom} — Merci pour votre confiance !<br>GIE RICS — Réseau Internet Communautaire</div>
+  </div>`;
+}
+
+function showTicket(payId){
+  showModal(`<h3>🎫 Ticket de paiement</h3>${generateTicketHTML(payId)}
+    <div style="display:flex;gap:6px;margin-top:14px">
+      <button class="btn btn-wa btn-full" onclick="shareWhatsApp('${payId}')">📱 Envoyer par WhatsApp</button>
+      <button class="btn btn-cy btn-sm" onclick="printTicket('${payId}')">🖨️</button>
+    </div>`);
+}
+
+function shareWhatsApp(payId){
+  const p=payments.find(x=>x.id===payId);if(!p)return;
+  const c=clients.find(x=>x.id===p.clientId);const pl=c?getPlan(c.plan):null;
+  const mois=p.moisCouvert?new Date(p.moisCouvert+"-01").toLocaleDateString("fr-FR",{month:"long",year:"numeric"}):"";
+  const phone=c?.telephone?.replace(/\s/g,"")||"";
+  const fullPhone=phone.startsWith("+")? phone : phone.startsWith("00")? "+"+phone.slice(2) : "+221"+phone;
+  
+  const text=`📡 *${config.nom||"Réseau Communautaire"}*\n━━━━━━━━━━━━━━━━\n🎫 *TICKET DE PAIEMENT*\n━━━━━━━━━━━━━━━━\nN° : ${p.recu||""}\nDate : ${$D(p.datePaiement)}\n\n👤 Client : *${c?.nom||""}*\nID : ${p.clientId}\n📋 Plan : ${pl?.name||""} (${pl?.speed||""})\n📅 Mois : ${mois}\n💳 Mode : ${p.mode||""}\n\n💰 *Montant : ${$F(p.montant)}*\n\n✅ *PAYÉ*\n━━━━━━━━━━━━━━━━\nMerci pour votre confiance !`;
+  
+  const encoded=encodeURIComponent(text);
+  window.open(`https://wa.me/${fullPhone}?text=${encoded}`,"_blank");
+}
+
+function printTicket(payId){
+  document.getElementById("print-area").innerHTML=generateTicketHTML(payId);
+  window.print();
+}
+
+// ══════════════════════════════════════════════════════════════
+// ICONS
+// ══════════════════════════════════════════════════════════════
+const I={
+  home:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>',
+  users:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+  money:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>',
+  ticket:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 002 2 2 2 0 012 2 2 2 0 01-2 2v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 01-2-2 2 2 0 012-2V7a2 2 0 00-2-2H5z"/></svg>',
+  gear:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-2.82 1.18V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1.08H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 8.82a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001.08-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001.08 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1.08H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1.08z"/></svg>',
+  bell:'<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>',
+};
+
+const TABS=[
+  {id:"dashboard",icon:I.home,label:"Accueil"},
+  {id:"clients",icon:I.users,label:"Clients"},
+  {id:"payments",icon:I.money,label:"Paiements"},
+  {id:"tickets",icon:I.ticket,label:"Tickets"},
+  {id:"settings",icon:I.gear,label:"Config"},
+];
+
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;render()});
+function installPWA(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════
+function render(){
+  const root=document.getElementById("root");
+  if(config.pin&&!authenticated)return renderLogin(root);
+  if(subPage==="clientDetail")return renderClientDetail(root);
+  if(subPage==="ticketView")return renderTicketPage(root);
+  
+  const imp=clients.filter(c=>c.statut==="Actif"&&gPS(c)==="impaye").length;
+  const bientot=clients.filter(c=>c.statut==="Actif"&&gPS(c)==="bientot").length;
+  const alertCount=imp+bientot;
+  
+  root.innerHTML=`
+    <div class="topbar">
+      <h1><span class="logo">📡</span> NET MANAGER</h1>
+      <div class="right"><span class="sync-dot"></span><span style="font-size:9px;color:var(--dm)">${clients.length} clients</span></div>
+    </div>
+    <div class="content" id="mc"></div>
+    <nav class="bottomnav"><div class="tabs">
+      ${TABS.map(t=>{
+        let badge="";
+        if(t.id==="dashboard"&&alertCount) badge=`<span class="cnt">${alertCount}</span>`;
+        if(t.id==="clients"&&imp) badge=`<span class="dot"></span>`;
+        return`<button class="tab ${page===t.id?'on':''}" onclick="nav('${t.id}')">${t.icon}<span>${t.label}</span>${badge}</button>`;
+      }).join("")}
+    </div></nav>
+  `;
+  const mc=document.getElementById("mc");
+  ({dashboard:rDash,clients:rClients,payments:rPay,tickets:rTickets,settings:rSettings})[page]?.(mc);
+}
+function nav(p){page=p;subPage=null;render()}
+
+// LOGIN
+function renderLogin(root){root.innerHTML=`<div class="login-screen"><div class="login-box"><div class="logo-big">📡</div><h1>NET MANAGER</h1><p>Entrez votre code PIN</p><div class="error" id="pin-error">Code incorrect</div><div class="fd"><label>CODE PIN</label><input type="password" id="pin-input" maxlength="6" placeholder="••••" inputmode="numeric" onkeyup="if(event.key==='Enter')checkPin()"></div><button class="btn btn-cy btn-full" style="margin-top:12px" onclick="checkPin()">🔐 Déverrouiller</button></div></div>`;setTimeout(()=>document.getElementById("pin-input")?.focus(),100)}
+function checkPin(){if(document.getElementById("pin-input").value===config.pin){authenticated=true;render()}else{const e=document.getElementById("pin-error");if(e)e.style.display="block"}}
+
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD — Enhanced with alerts
+// ══════════════════════════════════════════════════════════════
+function rDash(el){
+  const act=clients.filter(c=>c.statut==="Actif");
+  const rev=act.reduce((s,c)=>s+getPlan(c.plan).price,0);
+  const cm=$CM();
+  const enc=payments.filter(p=>p.moisCouvert===cm&&p.statut==="Payé").reduce((s,p)=>s+(p.montant||0),0);
+  const taux=clients.length?Math.round(act.length/clients.length*100):0;
+  const tauxRec=rev?Math.round(enc/rev*100):0;
+  const impList=act.filter(c=>gPS(c)==="impaye");
+  const bientotList=act.filter(c=>gPS(c)==="bientot");
+  const payeList=act.filter(c=>gPS(c)==="paye");
+
+  el.innerHTML=`
+    ${deferredPrompt?`<div class="install-banner"><div><div class="ib-text">Installer NET MANAGER</div></div><button class="ib-btn" onclick="installPWA()">Installer</button></div>`:''}
+    <div class="ph"><div><h2>Tableau de bord</h2><div class="sub">${new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div></div><button class="btn btn-cy btn-sm" onclick="openCM()">＋ Client</button></div>
+    <div class="kg">
+      ${[{l:"Clients actifs",v:act.length+"/"+clients.length,c:"var(--gn2)",i:"👥"},{l:"Taux activité",v:taux+"%",c:"var(--cy)",i:"📊"},{l:"Revenu potentiel",v:$F(rev),c:"var(--am2)",i:"💰",s:1},{l:"Encaissé ce mois",v:$F(enc),c:"var(--gn2)",i:"📥",s:1},{l:"Taux recouvrement",v:tauxRec+"%",c:tauxRec>=80?"var(--gn2)":tauxRec>=50?"var(--am2)":"var(--rd2)",i:"🎯"},{l:"Impayés",v:impList.length,c:"var(--rd2)",i:"⚠️"}].map(k=>`<div class="kc" style="border-top-color:${k.c}"><div class="kl">${k.l}</div><div class="kv${k.s?' sm':''}" style="color:${k.c}">${k.v}</div><span class="ki">${k.i}</span></div>`).join("")}
+    </div>
+
+    ${impList.length>0?`<div class="panel" style="border-color:rgba(239,83,80,.3)"><h3 style="color:var(--rd2)">🚨 Alertes impayés — ${impList.length} client${impList.length>1?"s":""}</h3>
+      ${impList.slice(0,10).map(c=>{const pl=getPlan(c.plan);const late=gDaysLate(c);
+        return`<div class="alert-card" onclick="openDetail('${c.id}')"><div class="ac-left"><span style="font-size:18px">🔴</span><div><div class="ac-name">${c.nom}</div><div class="ac-sub">Jour ${gJ(c)} • ${c.telephone||""}</div></div></div><div class="ac-right"><div class="ac-days" style="color:var(--rd2)">${late}j de retard</div><div class="ac-amount">${$F(pl.price)}</div></div></div>`;
+      }).join("")}
+    </div>`:''}
+
+    ${bientotList.length>0?`<div class="panel" style="border-color:rgba(255,167,38,.3)"><h3 style="color:var(--am2)">⏰ Paiements à venir — ${bientotList.length} client${bientotList.length>1?"s":""}</h3>
+      ${bientotList.map(c=>{const pl=getPlan(c.plan);const dl=gDaysLeft(c);
+        return`<div class="alert-card warn" onclick="openDetail('${c.id}')"><div class="ac-left"><span style="font-size:18px">🟡</span><div><div class="ac-name">${c.nom}</div><div class="ac-sub">Jour ${gJ(c)} • ${pl.name}</div></div></div><div class="ac-right"><div class="ac-days" style="color:var(--am2)">J-${dl}</div><div class="ac-amount">${$F(pl.price)}</div></div></div>`;
+      }).join("")}
+    </div>`:''}
+
+    <div class="panel"><h3>✅ Déjà payé ce mois (${payeList.length}/${act.length})</h3>
+      <div class="progress-bar" style="height:10px;border-radius:5px;margin-bottom:8px"><div class="progress-fill" style="width:${act.length?(payeList.length/act.length)*100:0}%;background:var(--gn2);border-radius:5px"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--gn2)">${payeList.length} payés</span><span style="color:var(--rd2)">${impList.length} impayés</span><span style="color:var(--am2)">${bientotList.length} bientôt</span></div>
+    </div>
+
+    <div class="panel"><h3>📋 Par plan</h3>
+      ${plans.map((p,i)=>{const n=clients.filter(c=>c.plan===p.id).length;const mx=Math.max(...plans.map(x=>clients.filter(c=>c.plan===x.id).length),1);const cols=["var(--gn2)","var(--cy)","var(--am2)","var(--bl2)","var(--pu)"];
+        return`<div class="progress-row"><div class="progress-top"><span class="progress-label">${p.name} (${p.speed})</span><span class="progress-value">${n} • ${$F(p.price)}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${(n/mx)*100}%;background:${cols[i%5]}"></div></div></div>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════
+// CLIENTS
+// ══════════════════════════════════════════════════════════════
+let cS="",cF="Tous";
+function rClients(el){
+  const f=clients.filter(c=>{const ms=!cS||c.nom?.toLowerCase().includes(cS.toLowerCase())||c.id?.includes(cS)||c.telephone?.includes(cS)||c.maison?.includes(cS);return ms&&(cF==="Tous"||c.statut===cF)});
+  el.innerHTML=`
+    <div class="ph"><h2>Clients</h2><button class="btn btn-cy" onclick="openCM()">＋</button></div>
+    <div class="search-box"><span class="si">🔍</span><input placeholder="Nom, tél, maison..." value="${cS}" oninput="cS=this.value;rClients(document.getElementById('mc'))"></div>
+    <div class="filters">${["Tous",...STATUTS].map(s=>`<button class="ftag ${cF===s?'on':''}" onclick="cF='${s}';rClients(document.getElementById('mc'))">${s}${s!=="Tous"?" ("+clients.filter(c=>c.statut===s).length+")":""}</button>`).join("")}</div>
+    <div style="font-size:10px;color:var(--dm);margin-bottom:6px">${f.length} résultat${f.length>1?"s":""}</div>
+    <div class="card-list">
+      ${f.length===0?'<div style="text-align:center;padding:24px;color:var(--dm)"><div style="font-size:32px;margin-bottom:6px">📋</div><p style="font-size:11px">'+(clients.length===0?"Ajoutez votre premier client":"Aucun résultat")+'</p></div>':
+        f.slice(0,100).map(c=>{const pl=getPlan(c.plan);const ps=gPS(c);const j=gJ(c);const sb=c.statut==="Actif"?"bg-gn":c.statut==="Suspendu"?"bg-rd":c.statut==="Expiré"?"bg-am":"bg-bl";
+          const psBadge=ps==="paye"?'<span class="bg bg-gn">Payé✓</span>':ps==="impaye"?`<span class="bg bg-rd">${gDaysLate(c)}j retard</span>`:ps==="bientot"?`<span class="bg bg-am">J-${gDaysLeft(c)}</span>`:"";
+          return`<div class="client-card" onclick="openDetail('${c.id}')"><div class="avatar" style="background:${getAC(c.nom)}">${getIn(c.nom)}</div><div class="info"><div class="name">${c.nom}</div><div class="meta"><span>${c.telephone||""}</span><span class="bg ${sb}">${c.statut}</span>${psBadge}</div></div><div class="right-info"><div class="price">${$F(pl.price)}</div><div class="day-badge">Jour ${j}</div></div></div>`;
+        }).join("")}
+      ${f.length>100?`<div style="text-align:center;padding:10px;color:var(--dm);font-size:11px">Affichage limité à 100 — ${f.length-100} autres masqués. Utilisez la recherche.</div>`:''}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// CLIENT DETAIL — with ticket generation
+// ══════════════════════════════════════════════════════════════
+function openDetail(id){selectedId=id;subPage="clientDetail";render()}
+function renderClientDetail(root){
+  const c=clients.find(x=>x.id===selectedId);if(!c)return nav("clients");
+  const pl=getPlan(c.plan);const j=gJ(c);const ps=gPS(c);
+  const cp=payments.filter(p=>p.clientId===c.id).sort((a,b)=>new Date(b.datePaiement)-new Date(a.datePaiement));
+  const cm=$CM();const col=getAC(c.nom);
+  const sb=c.statut==="Actif"?"bg-gn":c.statut==="Suspendu"?"bg-rd":"bg-am";
+  const daysInfo=ps==="impaye"?`<span style="color:var(--rd2);font-weight:700">${gDaysLate(c)} jours de retard</span>`:ps==="bientot"?`<span style="color:var(--am2)">Paiement dans ${gDaysLeft(c)} jours</span>`:ps==="paye"?`<span style="color:var(--gn2)">✅ Payé ce mois</span>`:"";
+
+  root.innerHTML=`
+    <div class="topbar"><h1><button class="ib" onclick="nav('clients')" style="margin-right:4px;font-size:18px">←</button> Fiche client</h1>
+    <div style="display:flex;gap:4px"><button class="ib" onclick="openCM('${c.id}')" style="font-size:14px">✏️</button><button class="ib" onclick="delC('${c.id}')" style="font-size:14px;color:var(--rd2)">🗑️</button></div></div>
+    <div class="content">
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="background:${col};width:52px;height:52px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin-bottom:6px">${getIn(c.nom)}</div>
+        <div style="font-size:18px;font-weight:800;color:var(--wh)">${c.nom}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cy)">${c.id}</div>
+        <div style="margin-top:4px"><span class="bg ${sb}" style="font-size:10px;padding:2px 10px">${c.statut}</span></div>
+        ${daysInfo?`<div style="margin-top:6px;font-size:11px">${daysInfo}</div>`:''}
+      </div>
+
+      <div class="detail-grid">
+        ${[["Téléphone",c.telephone],["Maison",c.maison||"—"],["Adresse",c.adresse||"—"],["Plan",pl.name+" — "+pl.speed],["Tarif",$F(pl.price)+"/mois"],["Jour paiement","Le "+j+" du mois"],["Inscrit le",$D(c.dateInscription)],["Équipement",c.equipement||"—"],["IP",c.ip||"—"],["Login PPPoE",c.loginPPPoE||"—"]].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v||"—"}</div></div>`).join("")}
+      </div>
+
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        ${ps!=="paye"?`<button class="btn btn-gn btn-full" onclick="toggleQP()">💰 Enregistrer paiement</button>`:`<button class="btn btn-gn btn-full" onclick="showTicket('${cp[0]?.id}')">🎫 Voir le ticket</button>`}
+      </div>
+
+      <div id="qp-area" style="display:none">
+        <div class="quick-pay">
+          <div class="qp-grid">
+            <div class="fd"><label>Date</label><input type="date" id="qd" value="${$T()}"></div>
+            <div class="fd"><label>Montant</label><input type="number" id="qm" value="${pl.price}" inputmode="numeric"></div>
+            <div class="fd"><label>Mode</label><select id="qq">${MODES.map(m=>`<option>${m}</option>`).join("")}</select></div>
+            <div class="fd"><label>Mois</label><input type="month" id="qmo" value="${cm}"></div>
+          </div>
+          <button class="btn btn-gn btn-full" onclick="quickPay('${c.id}')">✓ Payer ${$F(pl.price)}</button>
+        </div>
+      </div>
+
+      <div class="section-title"><span>Historique (${cp.length})</span></div>
+      ${cp.length===0?'<p style="color:var(--dm);font-size:10px;text-align:center;padding:10px">Aucun paiement</p>':
+        cp.slice(0,20).map(p=>`<div class="hist-item">
+          <div class="hi-left" style="display:flex;align-items:center;gap:8px">
+            <div><span class="ha">${$F(p.montant)}</span><span class="hm">${p.mode}</span></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="hd">${$D(p.datePaiement)}</span>
+            <button class="btn btn-wa btn-sm" onclick="event.stopPropagation();showTicket('${p.id}')" style="padding:3px 6px;font-size:9px">🎫</button>
+            <button class="btn btn-wa btn-sm" onclick="event.stopPropagation();shareWhatsApp('${p.id}')" style="padding:3px 6px;font-size:9px">📱</button>
+          </div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function toggleQP(){const a=document.getElementById("qp-area");a.style.display=a.style.display==="none"?"block":"none"}
+function quickPay(cid){
+  const m=+document.getElementById("qm").value||0;const recu=$REC();
+  const payId="PAY-"+Date.now();
+  payments.push({id:payId,clientId:cid,datePaiement:document.getElementById("qd").value,montant:m,mode:document.getElementById("qq").value,moisCouvert:document.getElementById("qmo").value,statut:"Payé",recu});
+  save();toast($F(m)+" enregistré — Ticket généré");
+  setTimeout(()=>showTicket(payId),300);render();
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAYMENTS
+// ══════════════════════════════════════════════════════════════
+let pS="";
+function rPay(el){
+  const sorted=payments.sort((a,b)=>new Date(b.datePaiement)-new Date(a.datePaiement));
+  const tot=payments.filter(p=>p.statut==="Payé").reduce((s,p)=>s+(p.montant||0),0);
+  const mi={"Espèces":"💵","Wave":"🌊","Orange Money":"📱","Free Money":"📲","Virement":"🏦"};
+  const f=sorted.filter(p=>{if(!pS)return true;const c=clients.find(x=>x.id===p.clientId);return c?.nom?.toLowerCase().includes(pS.toLowerCase())||p.clientId?.includes(pS)});
+
+  el.innerHTML=`
+    <div class="ph"><div><h2>Paiements</h2><div class="sub">Total : ${$F(tot)}</div></div><button class="btn btn-gn" onclick="openPM()">＋</button></div>
+    <div class="search-box"><span class="si">🔍</span><input placeholder="Rechercher..." value="${pS}" oninput="pS=this.value;rPay(document.getElementById('mc'))"></div>
+    <div class="card-list">
+      ${f.length===0?'<div style="text-align:center;padding:24px;color:var(--dm)"><div style="font-size:32px;margin-bottom:6px">💳</div><p style="font-size:11px">Aucun paiement</p></div>':
+        f.slice(0,50).map(p=>{const c=clients.find(x=>x.id===p.clientId);
+          return`<div class="pay-item"><div class="pi-left"><div class="pi-icon" style="background:var(--gnd)">${mi[p.mode]||"💰"}</div><div><div class="pi-name">${c?.nom||"—"}</div><div class="pi-meta">${p.mode} • ${p.recu||""}</div></div></div>
+          <div style="text-align:right"><div class="pi-amount">${$F(p.montant)}</div><div class="pi-date">${$D(p.datePaiement)}</div>
+          <div class="pi-actions"><button class="btn btn-sm btn-gh" onclick="showTicket('${p.id}')" style="font-size:9px;padding:2px 6px">🎫</button><button class="btn btn-sm btn-wa" onclick="shareWhatsApp('${p.id}')" style="font-size:9px;padding:2px 6px">📱</button></div></div></div>`;
+        }).join("")}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// TICKETS PAGE — Vue de tous les tickets
+// ══════════════════════════════════════════════════════════════
+function rTickets(el){
+  const sorted=payments.filter(p=>p.statut==="Payé").sort((a,b)=>new Date(b.datePaiement)-new Date(a.datePaiement));
+  el.innerHTML=`
+    <div class="ph"><div><h2>🎫 Tickets</h2><div class="sub">${sorted.length} tickets générés</div></div></div>
+    <div class="card-list">
+      ${sorted.length===0?'<div style="text-align:center;padding:24px;color:var(--dm)"><div style="font-size:32px;margin-bottom:6px">🎫</div><p style="font-size:11px">Enregistrez un paiement pour générer un ticket</p></div>':
+        sorted.slice(0,50).map(p=>{const c=clients.find(x=>x.id===p.clientId);const pl=c?getPlan(c.plan):null;
+          return`<div style="background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:700;color:var(--wh)">${c?.nom||"—"}</div><div style="font-size:10px;color:var(--dm)">${p.recu} • ${$D(p.datePaiement)} • ${p.mode}</div></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:13px;font-weight:700;color:var(--gn2);font-family:'JetBrains Mono',monospace">${$F(p.montant)}</span>
+              <button class="btn btn-sm btn-cy" onclick="showTicket('${p.id}')" style="padding:4px 8px;font-size:10px">🎫 Voir</button>
+              <button class="btn btn-sm btn-wa" onclick="shareWhatsApp('${p.id}')" style="padding:4px 8px;font-size:10px">📱</button>
+            </div>
+          </div>`;
+        }).join("")}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// SETTINGS — with editable plans
+// ══════════════════════════════════════════════════════════════
+function rSettings(el){
+  el.innerHTML=`
+    <div class="ph"><h2>Paramètres</h2></div>
+    <div class="setting-item" onclick="openCfgModal()"><div class="si-left"><div class="si-icon" style="background:var(--cyd)">📡</div><div><div class="si-title">Réseau</div><div class="si-desc">${config.nom||"Configurer"}</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div class="setting-item" onclick="openPlansModal()"><div class="si-left"><div class="si-icon" style="background:var(--amd)">💰</div><div><div class="si-title">Plans & Tarifs</div><div class="si-desc">Modifier les prix, noms, vitesses</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div class="setting-item" onclick="openPinModal()"><div class="si-left"><div class="si-icon" style="background:var(--rdd)">🔒</div><div><div class="si-title">Code PIN</div><div class="si-desc">${config.pin?"Activé":"Désactivé"}</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div class="setting-item" onclick="backupAll()"><div class="si-left"><div class="si-icon" style="background:var(--gnd)">💾</div><div><div class="si-title">Sauvegarder</div><div class="si-desc">Exporter JSON</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div class="setting-item" onclick="document.getElementById('rf').click()"><div class="si-left"><div class="si-icon" style="background:var(--bld)">📤</div><div><div class="si-title">Restaurer</div><div class="si-desc">Importer depuis fichier</div></div></div><span style="color:var(--dm)">›</span></div>
+    <input type="file" id="rf" accept=".json" style="display:none" onchange="restoreFile(this)">
+    <div class="setting-item" onclick="expCSV('cl')"><div class="si-left"><div class="si-icon" style="background:var(--amd)">📋</div><div><div class="si-title">Export clients CSV</div><div class="si-desc">${clients.length} clients</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div class="setting-item" onclick="expCSV('pa')"><div class="si-left"><div class="si-icon" style="background:var(--amd)">💳</div><div><div class="si-title">Export paiements CSV</div><div class="si-desc">${payments.length} paiements</div></div></div><span style="color:var(--dm)">›</span></div>
+    <div style="margin-top:16px;padding:12px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;text-align:center">
+      <div style="display:flex;justify-content:space-around;font-size:11px;color:var(--mu)"><div><strong style="color:var(--wh)">${clients.length}</strong> clients</div><div><strong style="color:var(--wh)">${payments.length}</strong> paiements</div></div>
+      <div style="margin-top:8px;font-size:9px;color:var(--cy);font-weight:700">NET MANAGER v5.0 — GIE RICS</div>
+    </div>
+    <button class="btn btn-rd btn-full" style="margin-top:10px" onclick="if(confirm('Supprimer TOUTES les données ?')){localStorage.clear();location.reload()}">🗑️ Réinitialiser</button>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════════════════════════
+function showModal(html){const d=document.createElement("div");d.className="modal-overlay";d.onclick=e=>{if(e.target===d)d.remove()};d.innerHTML=`<div class="modal-sheet"><div class="handle"></div>${html}</div>`;document.getElementById("root").appendChild(d)}
+function closeM(){document.querySelector(".modal-overlay")?.remove()}
+
+// Client add/edit
+function openCM(id){
+  const c=id?clients.find(x=>x.id===id):null;
+  showModal(`<h3>${c?"Modifier":"Nouveau client"}</h3><div class="fg">
+    <div class="fd full"><label>Nom complet *</label><input id="f-n" value="${c?.nom||""}"></div>
+    <div class="fd"><label>Téléphone *</label><input id="f-t" value="${c?.telephone||""}" inputmode="tel"></div>
+    <div class="fd"><label>N° Maison</label><input id="f-ma" value="${c?.maison||""}"></div>
+    <div class="fd full"><label>Adresse</label><input id="f-a" value="${c?.adresse||""}"></div>
+    <div class="fd"><label>Plan</label><select id="f-p">${plans.map(p=>`<option value="${p.id}" ${c?.plan===p.id?'selected':''}>${p.name} — ${$F(p.price)}</option>`).join("")}</select></div>
+    <div class="fd"><label>Statut</label><select id="f-s">${STATUTS.map(s=>`<option ${c?.statut===s?'selected':''}>${s}</option>`).join("")}</select></div>
+    <div class="fd"><label>Date inscription</label><input type="date" id="f-d" value="${c?.dateInscription||$T()}" onchange="document.getElementById('f-j').value=new Date(this.value).getDate()"></div>
+    <div class="fd"><label>Jour paiement</label><input type="number" id="f-j" min="1" max="31" value="${c?gJ(c):new Date().getDate()}" inputmode="numeric"></div>
+    <div class="sep"><span>Technique</span></div>
+    <div class="fd"><label>Équipement</label><select id="f-eq">${EQUIPS.map(e=>`<option ${c?.equipement===e?'selected':''}>${e}</option>`).join("")}</select></div>
+    <div class="fd"><label>IP</label><input id="f-ip" value="${c?.ip||""}" placeholder="192.168.88.xx"></div>
+    <div class="fd"><label>Login PPPoE</label><input id="f-l" value="${c?.loginPPPoE||""}"></div>
+    <div class="fd"><label>Mot de passe</label><input id="f-mp" value="${c?.mdpPPPoE||""}"></div>
+  </div><button class="btn btn-cy btn-full" style="margin-top:14px" onclick="saveCF('${id||''}')">${c?"Enregistrer":"Ajouter"}</button>`);
+}
+
+function saveCF(id){const n=document.getElementById("f-n").value.trim(),t=document.getElementById("f-t").value.trim();if(!n||!t)return alert("Nom et téléphone requis");const d={nom:n,telephone:t,maison:document.getElementById("f-ma").value,adresse:document.getElementById("f-a").value,plan:document.getElementById("f-p").value,statut:document.getElementById("f-s").value,dateInscription:document.getElementById("f-d").value,jourPaiement:+document.getElementById("f-j").value||1,equipement:document.getElementById("f-eq").value,ip:document.getElementById("f-ip").value,loginPPPoE:document.getElementById("f-l").value,mdpPPPoE:document.getElementById("f-mp").value};if(id){const i=clients.findIndex(c=>c.id===id);if(i>=0)clients[i]={...clients[i],...d};toast("Mis à jour")}else{clients.push({...d,id:$ID(),dateCreation:$T(),mac:$MAC()});toast(n+" ajouté")}save();closeM();render()}
+function delC(id){if(!confirm("Supprimer ce client et ses paiements ?"))return;clients=clients.filter(c=>c.id!==id);payments=payments.filter(p=>p.clientId!==id);save();toast("Supprimé","info");nav("clients")}
+
+// Payment modal
+function openPM(){const act=clients.filter(c=>c.statut==="Actif");const cm=$CM();showModal(`<h3>Nouveau paiement</h3><div class="fg"><div class="fd full"><label>Client</label><select id="pm-c" onchange="upPMA()">${act.map(c=>`<option value="${c.id}">${c.nom}</option>`).join("")}</select></div><div id="pm-info" class="full"></div><div class="fd"><label>Date</label><input type="date" id="pm-d" value="${$T()}"></div><div class="fd"><label>Montant</label><input type="number" id="pm-m" value="0" inputmode="numeric"></div><div class="fd"><label>Mode</label><select id="pm-mo">${MODES.map(m=>`<option>${m}</option>`).join("")}</select></div><div class="fd"><label>Mois</label><input type="month" id="pm-mc" value="${cm}"></div></div><button class="btn btn-gn btn-full" style="margin-top:14px" onclick="savePF()">✓ Enregistrer + Générer ticket</button>`);setTimeout(upPMA,50)}
+function upPMA(){const cid=document.getElementById("pm-c")?.value;const c=clients.find(x=>x.id===cid);const pl=c?getPlan(c.plan):null;const info=document.getElementById("pm-info");if(c&&pl){info.innerHTML=`<div style="background:var(--cyd);border-radius:8px;padding:8px 10px;font-size:10px;color:var(--cy)">${pl.name} — ${$F(pl.price)} — Jour ${gJ(c)}</div>`;document.getElementById("pm-m").value=pl.price}else if(info)info.innerHTML=""}
+function savePF(){const cid=document.getElementById("pm-c")?.value;if(!cid)return;const recu=$REC();const payId="PAY-"+Date.now();payments.push({id:payId,clientId:cid,datePaiement:document.getElementById("pm-d").value,montant:+document.getElementById("pm-m").value||0,mode:document.getElementById("pm-mo").value,moisCouvert:document.getElementById("pm-mc").value,statut:"Payé",recu});save();toast("Paiement enregistré");closeM();setTimeout(()=>showTicket(payId),200);render()}
+
+// Config modal
+function openCfgModal(){showModal(`<h3>Configuration</h3><div class="fg"><div class="fd full"><label>Nom du réseau</label><input id="c-n" value="${config.nom||""}"></div><div class="fd"><label>Localité</label><input id="c-l" value="${config.localite||""}"></div><div class="fd"><label>Responsable</label><input id="c-r" value="${config.responsable||""}"></div><div class="fd full"><label>Téléphone réseau</label><input id="c-t" value="${config.tel||""}"></div></div><button class="btn btn-cy btn-full" style="margin-top:14px" onclick="config.nom=document.getElementById('c-n').value;config.localite=document.getElementById('c-l').value;config.responsable=document.getElementById('c-r').value;config.tel=document.getElementById('c-t').value;save();toast('Sauvé');closeM();render()">✓ Enregistrer</button>`)}
+
+// ── PLANS MODAL — Modifier les prix ──
+function openPlansModal(){
+  showModal(`<h3>💰 Plans & Tarifs</h3>
+    <p style="font-size:10px;color:var(--dm);margin-bottom:12px">Modifiez les noms, vitesses et prix de chaque forfait</p>
+    ${plans.map((p,i)=>`
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:8px">
+        <div style="font-size:10px;color:var(--cy);font-weight:700;margin-bottom:6px;text-transform:uppercase">Plan ${i+1}</div>
+        <div class="fg">
+          <div class="fd"><label>Nom</label><input id="pl-n-${i}" value="${p.name}"></div>
+          <div class="fd"><label>Vitesse</label><input id="pl-s-${i}" value="${p.speed}"></div>
+          <div class="fd full"><label>Prix mensuel (FCFA)</label><input type="number" id="pl-p-${i}" value="${p.price}" inputmode="numeric"></div>
+        </div>
+      </div>
+    `).join("")}
+    <button class="btn btn-am btn-full" style="margin-top:8px" onclick="addPlan()">＋ Ajouter un plan</button>
+    <button class="btn btn-cy btn-full" style="margin-top:8px" onclick="savePlans()">✓ Enregistrer les tarifs</button>
+  `);
+}
+
+function savePlans(){
+  plans.forEach((p,i)=>{
+    const n=document.getElementById("pl-n-"+i);const s=document.getElementById("pl-s-"+i);const pr=document.getElementById("pl-p-"+i);
+    if(n)p.name=n.value;if(s)p.speed=s.value;if(pr)p.price=+pr.value||0;
+  });
+  save();toast("Tarifs mis à jour");closeM();render();
+}
+
+function addPlan(){
+  const id="plan_"+Date.now();
+  plans.push({id,name:"Nouveau plan",speed:"0 Mbps",price:0});
+  save();closeM();openPlansModal();
+}
+
+// PIN modal
+function openPinModal(){showModal(`<h3>Code PIN</h3><div class="fd"><label>Nouveau PIN (vide = désactivé)</label><input type="password" id="pin-new" maxlength="6" placeholder="••••" inputmode="numeric" value="${config.pin||""}"></div><button class="btn btn-cy btn-full" style="margin-top:12px" onclick="config.pin=document.getElementById('pin-new').value;save();toast(config.pin?'PIN activé':'PIN désactivé');closeM()">✓ Enregistrer</button>`)}
+
+// Export / Backup / Restore
+function expCSV(type){let h,r;if(type==="cl"){h=["ID","Nom","Téléphone","Maison","Adresse","Plan","Tarif","Statut","Date inscription","Jour paiement"];r=clients.map(c=>{const pl=getPlan(c.plan);return[c.id,c.nom,c.telephone,c.maison,c.adresse,pl.name,pl.price,c.statut,c.dateInscription,gJ(c)]})}else{h=["Date","Client","Montant","Mode","Mois","Statut","Reçu"];r=payments.map(p=>{const c=clients.find(x=>x.id===p.clientId);return[p.datePaiement,c?.nom,p.montant,p.mode,p.moisCouvert,p.statut,p.recu]})}dlF(type+"_export.csv","\uFEFF"+[h.join(";"),...r.map(x=>x.map(v=>'"'+(v||"")+'"').join(";"))].join("\n"),"text/csv");toast("CSV exporté","info")}
+function backupAll(){dlF("net-manager-backup-"+$T()+".json",JSON.stringify({version:"5.0",date:$T(),config,clients,payments,plans},null,2),"application/json");toast("Sauvegarde téléchargée","info")}
+function restoreFile(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(!confirm(`Restaurer ${d.clients?.length||0} clients ?`))return;if(d.config)config=d.config;if(d.clients)clients=d.clients;if(d.payments)payments=d.payments;if(d.plans)plans=d.plans;save();toast("Restauré !");render()}catch{alert("Fichier invalide")}};r.readAsText(f);input.value=""}
+function dlF(name,content,type){const b=new Blob([content],{type});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click()}
+
+render();
+</script>
+</body>
+</html>
